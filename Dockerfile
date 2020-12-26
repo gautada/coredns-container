@@ -23,7 +23,7 @@ RUN git clone https://github.com/coredns/coredns.git coredns
 
 # @to-do: Pull the blacklist plugin source code from github.
 # @to-do: REPLACE For now copy from the build context 
-COPY src/ /coredns/plugin/blacklist
+# COPY src/ /coredns/plugin/blacklist
 # Add the blacklist plugin to the build manifest
 # RUN printf "\nblacklist:blacklist\n" >> /coredns/plugin.cfg
 
@@ -45,7 +45,7 @@ WORKDIR /
 COPY --from=config-alpine /etc/localtime /etc/localtime
 COPY --from=config-alpine /etc/timezone  /etc/timezone
 
-COPY --from=src-coredns /coredns/coredns /usr/bin/coredns 
+COPY --from=src-coredns /coredns/coredns /usr/bin/coredns
 
 # COPY hosts /etc/coredns/hosts
 # COPY whitelist /etc/coredns/whitelist
