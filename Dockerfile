@@ -32,5 +32,5 @@ RUN apk add --no-cache bind-tools
 
 COPY --from=src-coredns /coredns/coredns /usr/bin/coredns
 
-ENTRYPOINT ["/usr/bin/coredns""]
-CMD ["-conf", "/etc/coredns/Corefile"]
+# ENTRYPOINT ["/usr/bin/coredns""]
+# CMD ["-conf", "/etc/coredns/Corefile"]
