@@ -31,6 +31,7 @@ EXPOSE 9153/tcp
 RUN apk add --no-cache bind-tools
 
 COPY --from=src-coredns /coredns/coredns /usr/bin/coredns
+COPY Corefile /etc/coredns/Corefile
 
-# ENTRYPOINT ["/usr/bin/coredns""]
-# CMD ["-conf", "/etc/coredns/Corefile"]
+ENTRYPOINT ["/usr/bin/coredns"]
+CMD ["-conf", "/etc/coredns/Corefile"]
