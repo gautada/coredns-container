@@ -1,0 +1,26 @@
+';
+; Zone file for example.local
+;
+; The full zone file
+;
+$TTL 3D
+@       IN      SOA     ns.example.local. hostmaster.example.local. (
+                    199802151       ; serial, todays date + todays serial #
+                    8H              ; refresh, seconds
+                    2H              ; retry, seconds
+                    4W              ; expire, seconds
+                    1D )            ; minimum, seconds
+;
+                    TXT     "example.local for coredns testing"
+                    NS      ns              ; Inet Address of name server
+                    MX      10 mail.example.local ; Primary Mail Exchanger
+
+
+localhost       A       127.0.0.1
+
+test1           A       172.16.0.1
+test2           A       172.16.0.2
+
+
+
+
