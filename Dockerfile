@@ -26,6 +26,8 @@ COPY --from=config-alpine /etc/localtime /etc/localtime
 COPY --from=config-alpine /etc/timezone  /etc/timezone
 
 EXPOSE 53/tcp 53/udp
+EXPOSE 8080/tcp
+EXPOSE 8181/tcp
 EXPOSE 9153/tcp
 
 RUN apk add --no-cache bind-tools
