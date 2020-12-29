@@ -7,10 +7,10 @@
         log . {
           class all
         }
-        kubernetes cluster.local in-addr.arpa ip6.arpa {
-            pods insecure
-            fallthrough in-addr.arpa ip6.arpa
-        }
+#         kubernetes cluster.local in-addr.arpa ip6.arpa {
+#             pods insecure
+#             fallthrough in-addr.arpa ip6.arpa
+#         }
         prometheus :9153
         hosts /etc/coredns/hosts {
           no_reverse
