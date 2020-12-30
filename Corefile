@@ -12,7 +12,7 @@
 #             fallthrough in-addr.arpa ip6.arpa
 #         }
         prometheus :9153
-        file db.example.local example.local
+        file /etc/coredns/zone.example.local example.local
         hosts /etc/coredns/hosts {
           no_reverse
           fallthrough

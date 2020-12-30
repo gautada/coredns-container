@@ -14,6 +14,7 @@ RUN apk add --no-cache git go
 
 
 # Pull the coredns source code from github. 
+RUN git config --global advice.detachedHead false
 RUN git clone --branch v1.8.0 --depth 1 https://github.com/coredns/coredns.git coredns
 
 WORKDIR /coredns                                                                                                                                                       
@@ -33,7 +34,10 @@ EXPOSE 9153/tcp
 RUN apk add --no-cache bind-tools
 
 COPY --from=src-coredns /coredns/coredns /usr/bin/coredns
+
 COPY Corefile /etc/coredns/Corefile
+COPY zone.example.local /etc/coredns/zone.example.local
+COPY hosts /etc/coredns/hosts 
 
 ENTRYPOINT ["/usr/bin/coredns"]
 CMD ["-conf", "/etc/coredns/Corefile"]
