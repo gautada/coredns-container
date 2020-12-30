@@ -1,24 +1,31 @@
 .:53 {
         errors
-        health {
-          lameduck 5s
-        }
-        ready
         log . {
           class all
         }
+
 #         kubernetes cluster.local in-addr.arpa ip6.arpa {
 #             pods insecure
 #             fallthrough in-addr.arpa ip6.arpa
 #         }
-        prometheus :9153
+
+        file /etc/coredns/zone.example.local example.local
+
         hosts /etc/coredns/hosts {
           no_reverse
           fallthrough
         }
+
         forward . tls://1.1.1.1 tls://1.0.0.1 {
           tls_servername tls.cloudflare-dns.com
         }
+
+        health {
+          lameduck 5s
+        }
+        ready
+        prometheus :9153
+
         cache 30
         loop
         reload 60s
