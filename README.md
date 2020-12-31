@@ -58,7 +58,17 @@ docker run --env KUBERNETES_SERVICE_HOST=192.168.4.200 \
 
 https://help.dyn.com/how-to-format-a-zone-file/
  
-## 
+### file
+
+### hosts
+
+Blacklist
+
+https://firebog.net
+https://raw.githubusercontent.com/StevenBlack/hosts/master/hosts
+
+### forward
+
 ## Testing
 
 Using digg to [test the dns server](https://www.a2hosting.com/kb/getting-started-guide/internet-and-networking/troubleshooting-dns-with-dig-and-nslookup):

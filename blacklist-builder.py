@@ -1,3 +1,6 @@
+#  grep "^0\.0\.0\.0 " | cut -d' ' -f2 | sort -u
+
+
 blocked = []
 x = """
 $ORIGIN test.foo.
