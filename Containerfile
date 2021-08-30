@@ -14,7 +14,7 @@ RUN apk add --no-cache git go
 
 # Pull the coredns source code from github. 
 RUN git config --global advice.detachedHead false
-RUN git clone --branch $BRANCH --depth 1 https://github.com/coredns/coredns.git coredns
+RUN git clone --branch $BRANCH --depth 1 https://github.com/coredns/coredns.git
 
 WORKDIR /coredns                                                                                                                                                       
 RUN go generate 
