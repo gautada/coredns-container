@@ -1,6 +1,6 @@
 kind: pipeline
 type: kubernetes
-name: Docker Test
+name: CI
 
 steps:
 - name: integrate
