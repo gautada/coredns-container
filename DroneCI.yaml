@@ -1,6 +1,6 @@
 kind: pipeline
 type: kubernetes
-name: Docker Test
+name: Continuous Integration
 
 steps:
 - name: integrate
@@ -18,9 +18,10 @@ steps:
   commands:
   - buildah login --username=$DOCKER_USERNAME --password=$DOCKER_PASSWORD docker.io
   - buildah bud --build-arg ALPINE_TAG=$ALPINE_TAG --build-arg BRANCH=$OCI_VERSION --tag localhost/coredns:dev -f Containerfile
-  # to-do: run the container, add the tests, then publish
   - buildah push localhost/coredns:dev docker://docker.io/gautada/coredns:$OCI_VERSION
 
-  
+ trigger:
+  branch:
+  - main
 
 
