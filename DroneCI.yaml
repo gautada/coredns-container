@@ -45,7 +45,7 @@ steps:
     PODMAN_CERT_x86:
       from_secret: podman.cert.x86
     ALPINE_TAG: 3.14.1
-    OCI_VERSION: v1.8.4
+    VERSION: v1.8.4
   commands:
   - /builder-base 5
   - podman --remote --connection arm build --build-arg ALPINE_TAG=3.14.2 --build-arg BRANCH=$VERSION --file Containerfile --no-cache --tag coredns:dev .
