@@ -48,12 +48,12 @@ steps:
     OCI_VERSION: v1.8.4
   commands:
   - /builder-base 5
-  - podman --remote --connection arm build --build-arg ALPINE_TAG=3.14.2 --build-arg VERSION=$VERSION --file Containerfile --no-cache --tag coredns:dev .
+  - podman --remote --connection arm build --build-arg ALPINE_TAG=3.14.2 --build-arg BRANCH=$VERSION --file Containerfile --no-cache --tag coredns:dev .
   - podman --remote --connection arm tag coredns:dev docker.io/gautada/coredns:v1.8.4-arm
   - podman --remote --connection arm login --username=$DOCKER_USERNAME --password=$DOCKER_PASSWORD docker.io
   - podman --remote --connection arm push docker.io/gautada/coredns:v1.8.4-arm
   
-  - podman --remote --connection x86 build --build-arg ALPINE_TAG=3.14.2  --build-arg VERSION=$VERSION --file Containerfile --no-cache --tag coredns:dev .
+  - podman --remote --connection x86 build --build-arg ALPINE_TAG=3.14.2  --build-arg BRANCH=$VERSION --file Containerfile --no-cache --tag coredns:dev .
   - podman --remote --connection x86 tag coredns:dev docker.io/gautada/coredns:v1.8.4-x86
   - podman --remote --connection x86 login --username=$DOCKER_USERNAME --password=$DOCKER_PASSWORD docker.io
   - podman --remote --connection x86 push docker.io/gautada/coredns:v1.8.4-x86
