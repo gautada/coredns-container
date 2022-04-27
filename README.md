@@ -1,14 +1,15 @@
 # Container - CoreDNS
 
-This is container instantiates CoreDNS providing a DNS service with multiple aspects enabled through plugins: 
+This is container instantiates CoreDNS providing a DNS service with multiple aspects enabled through plugins. 
+This container builds CoreDNS from source and provides the basic configuration stubs that are useful in the 
+cluster and as a complete home DNS service.
 
--**[kubernetes](https://coredns.io/plugins/kubernetes/)** - cluster dynamic name resolution
--**[file](https://coredns.io/plugins/file/)** - system name resolution using a zone file insidedescribing a private LAN
--**[hosts](https://coredns.io/plugins/hosts/)** - DNS based name resolution of a blacklist of domains..
--**[forward](https://coredns.io/plugins/forward/)** - local dns access for internet name resolution 
+## Plugins
 
-This container builds CoreDNS from source and provides the basic configuration stubs
-that are useful in the cluster and as a complete home DNS service.
+- **[kubernetes](https://coredns.io/plugins/kubernetes/)** - cluster dynamic name resolution
+- **[file](https://coredns.io/plugins/file/)** - system name resolution using a zone file insidedescribing a private LAN
+- **[hosts](https://coredns.io/plugins/hosts/)** - DNS based name resolution of a blacklist of domains..
+- **[forward](https://coredns.io/plugins/forward/)** - local dns access for internet name resolution 
 
 ## Upstream
 
