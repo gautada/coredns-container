@@ -29,7 +29,6 @@ LABEL description="This container is a coredns container."
 
 USER root
 WORKDIR /
-VOLUME /opt/cdns
 
 EXPOSE 53/tcp 53/udp
 EXPOSE 8080/tcp
@@ -44,7 +43,8 @@ COPY config/Corefile /etc/coredns/Corefile
 COPY config/zone.example.local /etc/coredns/zone.example.local
 COPY config/hosts /etc/coredns/hosts 
 
-ARG USER=cdns
+ARG USER=coredns
+VOLUME /opt/%USER
 RUN /bin/mkdir -p /opt/$USER \
  && /usr/sbin/addgroup $USER \
  && /usr/sbin/adduser -D -s /bin/ash -G $USER $USER \
