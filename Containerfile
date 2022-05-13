@@ -18,14 +18,18 @@ WORKDIR /coredns
 RUN go generate 
 RUN go build
 
-FROM docker.io/gautada/alpine:$ALPINE_VERSION
 
-USER root
-WORKDIR /
+#
+# ------------------------------------------------------------- CONTAINER
+FROM docker.io/gautada/alpine:$ALPINE_VERSION
 
 LABEL source="https://github.com/gautada/coredns-container.git"
 LABEL maintainer="Adam Gautier <adam@gautier.org>"
 LABEL description="This container is a coredns container."
+
+USER root
+WORKDIR /
+VOLUME /opt/cdns
 
 EXPOSE 53/tcp 53/udp
 EXPOSE 8080/tcp
@@ -40,5 +44,13 @@ COPY config/Corefile /etc/coredns/Corefile
 COPY config/zone.example.local /etc/coredns/zone.example.local
 COPY config/hosts /etc/coredns/hosts 
 
-# ENTRYPOINT ["/usr/bin/coredns"]
-# CMD ["-conf", "/etc/coredns/Corefile"]
+ARG USER=cdns
+RUN /bin/mkdir -p /opt/$USER \
+ && /usr/sbin/addgroup $USER \
+ && /usr/sbin/adduser -D -s /bin/ash -G $USER $USER \
+ && /usr/sbin/usermod -aG wheel $USER \
+ && /bin/echo "$USER:$USER" | chpasswd \
+ && /bin/chown $USER:$USER -R /opt/$USER
+ 
+USER $USER
+WORKDIR /home/$USER
