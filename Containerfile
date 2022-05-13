@@ -1,12 +1,12 @@
 ARG ALPINE_VERSION=3.15.4
+FROM docker.io/gautada/alpine:$ALPINE_VERSION as src-coredns
+
 ARG COREDNS_VERSION=1.8.4
 
-FROM gautada/alpine:$ALPINE_VERSION as src-coredns
+ARG COREDNS_BRANCH=v$COREDNS_VERSION
 
 USER root
 WORKDIR /
-
-ARG COREDNS_BRANCH=v$COREDNS_VERSION
 
 RUN apk add --no-cache git go
 
@@ -18,7 +18,7 @@ WORKDIR /coredns
 RUN go generate 
 RUN go build
 
-FROM gautada/alpine:$ALPINE_VERSION
+FROM docker.io/gautada/alpine:$ALPINE_VERSION
 
 USER root
 WORKDIR /
