@@ -1,13 +1,11 @@
-ARG ALPINE_TAG=3.14.1
-FROM alpine:$ALPINE_TAG as config-alpine
+ARG ALPINE_VERSION=3.15.4
+ARG COREDNS_VERSION=1.8.4
+FROM alpine:$ALPINE_VERSION as src-coredns
 
-RUN apk add --no-cache tzdata
+USER root
+WORKDIR /
 
-RUN cp -v /usr/share/zoneinfo/America/New_York /etc/localtime
-RUN echo "America/New_York" > /etc/timezone
-
-FROM alpine:$ALPINE_TAG as src-coredns
-ARG BRANCH=v0.0.0
+ARG COREDNS_BRANCH=v$COREDNS_VERSION
 
 RUN apk add --no-cache git go
 
@@ -19,23 +17,27 @@ WORKDIR /coredns
 RUN go generate 
 RUN go build
 
-FROM alpine:$ALPINE_TAG
+FROM alpine:$ALPINE_VERSION
 
-COPY --from=config-alpine /etc/localtime /etc/localtime
-COPY --from=config-alpine /etc/timezone  /etc/timezone
+USER root
+WORKDIR /
+
+LABEL source="https://github.com/gautada/coredns-container.git"
+LABEL maintainer="Adam Gautier <adam@gautier.org>"
+LABEL description="This container is a coredns container."
 
 EXPOSE 53/tcp 53/udp
 EXPOSE 8080/tcp
 EXPOSE 8181/tcp
 EXPOSE 9153/tcp
 
-RUN apk add --no-cache bind-tools
-
 COPY --from=src-coredns /coredns/coredns /usr/bin/coredns
+
+RUN apk add --no-cache bind-tools
 
 COPY config/Corefile /etc/coredns/Corefile
 COPY config/zone.example.local /etc/coredns/zone.example.local
 COPY config/hosts /etc/coredns/hosts 
 
-ENTRYPOINT ["/usr/bin/coredns"]
-CMD ["-conf", "/etc/coredns/Corefile"]
+# ENTRYPOINT ["/usr/bin/coredns"]
+# CMD ["-conf", "/etc/coredns/Corefile"]

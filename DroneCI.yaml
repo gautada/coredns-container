@@ -1,75 +1,28 @@
 kind: pipeline
-type: kubernetes
-name: Continuous Integration
+type: exec
+name: Container Build - CoreDNS
+
+platform:
+  os: linux
+  arch: arm64
 
 steps:
-- name: integrate
-  image: gautada/builder:v1.21.4_v3.2.3
-  privileged: true
+- name: build
   environment:
-    DOCKER_USERNAME:
-      from_secret: username.docker.io
-    DOCKER_PASSWORD:
-      from_secret: password.docker.io
-    
-    OCI_OS: linux
-    OCI_ARCH: arm64
+    ALPINE_VERSION: 3.15.4
+    COREDNS_VERSION: 1.8.4
   commands:
-  - buildah login --username=$DOCKER_USERNAME --password=$DOCKER_PASSWORD docker.io
-  - buildah bud --build-arg ALPINE_TAG=$ALPINE_TAG --build-arg BRANCH=$OCI_VERSION --tag localhost/coredns:dev -f Containerfile
-  - buildah push localhost/coredns:dev docker://docker.io/gautada/coredns:$OCI_VERSION
+  - podman build --build-arg ALPINE_VERSION=$ALPINE_VERSION --build-arg COREDNS_VERSION=$COREDNS_VERSION --build-arg --file Containerfile --label revision="$(git rev-parse HEAD)" --label version="$(date +%Y.%m.%d)" --no-cache --tag coredns:build .
 
-trigger:
-  branch:
-  - main
-
-kind: pipeline
-type: kubernetes
-name: Continuous Integration
-
-steps:
-- name: build-arm
-  image: docker.io/gautada/builder:3.2.3-r1-arm
-  privileged: true
+- name: publish
   environment:
-    DOCKER_USERNAME:
+        COREDNS_VERSION: 1.8.4
+    DOCKERIO_USERNAME:
       from_secret: username.docker.io
-    DOCKER_PASSWORD:
+    DOCKERIO_PASSWORD:
       from_secret: password.docker.io
-    PODMAN_KEY_ARM:
-      from_secret: podman.key.arm
-    PODMAN_CERT_ARM:
-      from_secret: podman.cert.arm
-    PODMAN_KEY_x86:
-      from_secret: podman.key.x86
-    PODMAN_CERT_x86:
-      from_secret: podman.cert.x86
-    ALPINE_TAG: 3.14.1
-    VERSION: v1.8.4
   commands:
-  - /builder-base 5
-  - podman --remote --connection arm build --build-arg ALPINE_TAG=3.14.2 --build-arg BRANCH=$VERSION --file Containerfile --no-cache --tag coredns:dev .
-  - podman --remote --connection arm tag coredns:dev docker.io/gautada/coredns:v1.8.4-arm
-  - podman --remote --connection arm login --username=$DOCKER_USERNAME --password=$DOCKER_PASSWORD docker.io
-  - podman --remote --connection arm push docker.io/gautada/coredns:v1.8.4-arm
-  # podman --remote --connection x86 build --build-arg ALPINE_TAG=3.14.2  --build-arg BRANCH=$VERSION --file Containerfile --no-cache --tag coredns:dev .
-  # podman --remote --connection x86 tag coredns:dev docker.io/gautada/coredns:v1.8.4-x86
-  # podman --remote --connection x86 login --username=$DOCKER_USERNAME --password=$DOCKER_PASSWORD docker.io
-  # podman --remote --connection x86 push docker.io/gautada/coredns:v1.8.4-x86
-  # podman --remote --connection arm manifest create coredns:man
-  # podman --remote --connection arm manifest add coredns:man docker.io/gautada/coredns:v1.8.4-arm
-  # podman --remote --connection arm manifest add coredns:man docker.io/gautada/coredns:v1.8.4-x86
-  # podman --remote --connection arm tag drone:man docker.io/gautada/coredns:v1.8.4
-  # podman --remote --connection arm login --username=$DOCKER_USERNAME --password=$DOCKER_PASSWORD docker.io
-  # podman --remote --connection arm push docker.io/gautada/coredns:v1.8.4
-  # podman --remote --connection arm rmi coredns:man
-  # podman --remote --connection arm rmi coredns:dev
-  # podman --remote --connection x86 rmi coredns:dev
-
-trigger:
-  branch:
-  - dev
-
-
-
-
+   - podman tag drone:build docker.io/gautada/coredns:$COREDNS_VERSION
+   - podman login --username=$DOCKERIO_USERNAME --password=$DOCKERIO_PASSWORD docker.io
+   - podman push docker.io/gautada/coredns:$COREDNS_VERSION
+  
