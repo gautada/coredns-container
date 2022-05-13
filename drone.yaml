@@ -22,7 +22,7 @@ steps:
     DOCKERIO_PASSWORD:
       from_secret: password.docker.io
   commands:
-   - podman tag drone:build docker.io/gautada/coredns:$COREDNS_VERSION
+   - podman tag coredns:build docker.io/gautada/coredns:$COREDNS_VERSION
    - podman login --username=$DOCKERIO_USERNAME --password=$DOCKERIO_PASSWORD docker.io
    - podman push docker.io/gautada/coredns:$COREDNS_VERSION
   
