@@ -16,7 +16,7 @@ steps:
 
 - name: publish
   environment:
-        COREDNS_VERSION: 1.8.4
+    COREDNS_VERSION: 1.8.4
     DOCKERIO_USERNAME:
       from_secret: username.docker.io
     DOCKERIO_PASSWORD:
