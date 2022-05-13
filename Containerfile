@@ -1,6 +1,7 @@
 ARG ALPINE_VERSION=3.15.4
 ARG COREDNS_VERSION=1.8.4
-FROM alpine:$ALPINE_VERSION as src-coredns
+
+FROM gautada/alpine:$ALPINE_VERSION as src-coredns
 
 USER root
 WORKDIR /
@@ -17,7 +18,7 @@ WORKDIR /coredns
 RUN go generate 
 RUN go build
 
-FROM alpine:$ALPINE_VERSION
+FROM gautada/alpine:$ALPINE_VERSION
 
 USER root
 WORKDIR /
