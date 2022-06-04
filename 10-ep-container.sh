@@ -8,7 +8,7 @@ echo "---------- [ DOMAIN NAME SERVICE(coredns) ] ----------"
 if [ -z "$ENTRYPOINT_PARAMS" ] ; then
  TEST="$(/usr/bin/pgrep /usr/bin/coredns)"
  if [ $? -eq 1 ] ; then
-  /usr/bin/coredns -conf /etc/coredns/Corefile
+  /usr/bin/sudo /usr/bin/coredns -conf /etc/coredns/Corefile
   return 1
  fi
 else

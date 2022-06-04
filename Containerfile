@@ -60,7 +60,8 @@ EXPOSE 9153/tcp
 # ╭――――――――――――――――――――╮
 # │ SUDO               │
 # ╰――――――――――――――――――――╯
-RUN /bin/echo "%wheel         ALL = (ALL) NOPASSWD: /usr/bin/coredns" >> /etc/sudoers
+COPY coredns.wheel /etc/sudo/sudoers.d/coredns.wheel
+
 
 # ╭――――――――――――――――――――╮
 # │ APPLICATION        │
@@ -77,7 +78,7 @@ RUN mkdir -p /etc/coredns \
 # │ USER               │
 # ╰――――――――――――――――――――╯
 ARG USER=coredns
-VOLUME /opt/$USER
+# VOLUME /opt/$USER
 RUN /bin/mkdir -p /opt/$USER \
  && /usr/sbin/addgroup $USER \
  && /usr/sbin/adduser -D -s /bin/ash -G $USER $USER \
@@ -85,5 +86,5 @@ RUN /bin/mkdir -p /opt/$USER \
  && /bin/echo "$USER:$USER" | chpasswd \
  && /bin/chown $USER:$USER -R /opt/$USER
 
-# USER $USER
-# WORKDIR /home/$USER
+USER $USER
+WORKDIR /home/$USER
