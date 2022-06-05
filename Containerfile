@@ -50,6 +50,11 @@ LABEL maintainer="Adam Gautier <adam@gautier.org>"
 LABEL description="This container is a coredns container."
 
 # ╭――――――――――――――――――――╮
+# │ ENVIRONMENT        │
+# ╰――――――――――――――――――――╯
+COPY 99-profile.sh /etc/profile.d/99-profile.sh
+
+# ╭――――――――――――――――――――╮
 # │ PORTS              │
 # ╰――――――――――――――――――――╯
 EXPOSE 53/tcp 53/udp
@@ -61,7 +66,6 @@ EXPOSE 9153/tcp
 # │ SUDO               │
 # ╰――――――――――――――――――――╯
 COPY wheel-coredns /etc/sudoers.d/wheel-coredns
-
 
 # ╭――――――――――――――――――――╮
 # │ APPLICATION        │
@@ -86,5 +90,5 @@ RUN /bin/mkdir -p /opt/$USER \
  && /bin/echo "$USER:$USER" | chpasswd \
  && /bin/chown $USER:$USER -R /opt/$USER
 
-USER $USER
+USER root
 WORKDIR /home/$USER
