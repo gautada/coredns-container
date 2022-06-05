@@ -60,7 +60,7 @@ EXPOSE 9153/tcp
 # ╭――――――――――――――――――――╮
 # │ SUDO               │
 # ╰――――――――――――――――――――╯
-COPY coredns.wheel /etc/sudo/sudoers.d/coredns.wheel
+COPY coredns.wheel /etc/sudoers.d/coredns.wheel
 
 
 # ╭――――――――――――――――――――╮
