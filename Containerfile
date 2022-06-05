@@ -60,13 +60,13 @@ EXPOSE 9153/tcp
 # ╭――――――――――――――――――――╮
 # │ SUDO               │
 # ╰――――――――――――――――――――╯
-COPY coredns.wheel /etc/sudoers.d/coredns.wheel
+COPY wheel-coredns /etc/sudoers.d/wheel-coredns
 
 
 # ╭――――――――――――――――――――╮
 # │ APPLICATION        │
 # ╰――――――――――――――――――――╯
-RUN chmod -x /etc/entrypoint.d/00-ep-bastion.sh /etc/entrypoint.d/01-ep-crond.sh /etc/entrypoint.d/99-ep-exec.sh
+# RUN chmod -x /etc/entrypoint.d/00-ep-bastion.sh /etc/entrypoint.d/01-ep-crond.sh /etc/entrypoint.d/99-ep-exec.sh
 COPY --from=src-coredns /coredns/coredns /usr/bin/coredns
 COPY 10-ep-container.sh /etc/entrypoint.d/10-ep-container.sh
 RUN mkdir -p /etc/coredns \

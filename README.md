@@ -21,7 +21,7 @@ cluster and as a complete home DNS service.
 
 docker build --build-arg ALPINE_VERSION=3.16.0 --build-arg COREDNS_VERSION=1.9.3 --file Containerfile --label revision="$(git rev-parse HEAD)" --label version="$(date +%Y.%m.%d)" --no-cache --tag coredns:build .
 
-docker run --interactive --tty --name coredns --rm --publish-all --volume ~/Workspace/drone/coredns-container:/opt/coredns coredns:build 
+docker run --interactive --tty --name coredns --rm --publish 53/tcp --publish 53/udp --volume ~/Workspace/coredns/coredns-container:/opt/coredns coredns:build
 
 ### Corefile
 
