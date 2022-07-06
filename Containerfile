@@ -52,7 +52,8 @@ LABEL description="This container is a coredns container."
 # ╭――――――――――――――――――――╮
 # │ ENVIRONMENT        │
 # ╰――――――――――――――――――――╯
-COPY 99-profile.sh /etc/profile.d/99-profile.sh
+# This force to change user did not work Issue #16
+# COPY 99-profile.sh /etc/profile.d/99-profile.sh
 
 # ╭――――――――――――――――――――╮
 # │ PORTS              │
