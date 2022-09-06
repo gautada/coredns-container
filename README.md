@@ -1,33 +1,20 @@
-# Container - CoreDNS
+# CoreDNS
 
-This is container instantiates CoreDNS providing a DNS service with multiple aspects enabled through plugins. 
-This container builds CoreDNS from source and provides the basic configuration stubs that are useful in the 
-cluster and as a complete home DNS service.
+This container instantiates [CoreDNS](https://coredns.io) providing a DNS service with multiple aspects enabled through plugins. This container builds [CoreDNS from source](https://github.com/coredns/coredns) and provides the basic configuration stubs that are useful in the cluster and as a complete home DNS service.
 
-## Plugins
+**Plugins**
 
 - **[kubernetes](https://coredns.io/plugins/kubernetes/)** - cluster dynamic name resolution
 - **[file](https://coredns.io/plugins/file/)** - system name resolution using a zone file insidedescribing a private LAN
 - **[hosts](https://coredns.io/plugins/hosts/)** - DNS based name resolution of a blacklist of domains..
 - **[forward](https://coredns.io/plugins/forward/)** - local dns access for internet name resolution 
 
-## Upstream
-
-* CoreDNS **v1.8.0**
- * [Project](https://coredns.io)
- * [github](https://github.com/coredns/coredns)
 
 ## Configuration
 
-docker build --build-arg ALPINE_VERSION=3.16.0 --build-arg COREDNS_VERSION=1.9.3 --file Containerfile --label revision="$(git rev-parse HEAD)" --label version="$(date +%Y.%m.%d)" --no-cache --tag coredns:build .
-
-docker run --interactive --tty --name coredns --rm --publish 53/tcp --publish 53/udp --volume ~/Workspace/coredns/coredns-container:/opt/coredns coredns:build
-
 ### Corefile
 
-The primary configuration for coredns. This is where the all the plugins get initally loaded and 
-configured. CoreDNS offers multiple plugins and good documentation to refer provided are the plugin 
-configurations that provide the feature aspects described above.
+The primary configuration for coredns. This is where the all the plugins get initally loaded and configured. CoreDNS offers multiple plugins and good documentation to refer provided are the plugin configurations that provide the feature aspects described above.
 
 ```
 .:53 {
