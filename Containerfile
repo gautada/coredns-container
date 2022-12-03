@@ -1,15 +1,15 @@
 ARG ALPINE_VERSION=3.15.4
-# ╭――――――――――――――――---------------------------------------------------------――╮
-# │                                                                           │
-# │ STAGE 1: src-coredns -- Build from soure                                  │
-# │                                                                           │
+# ╭―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――╮
+# │                                                                         │
+# │ STAGE: src-coredns -- Build from soure                                  │
+# │                                                                         │
 # ╰―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――╯
 FROM gautada/alpine:$ALPINE_VERSION as src-coredns
 
 # ╭――――――――――――――――――――╮
 # │ VERSION(S)         │
 # ╰――――――――――――――――――――╯
-ARG COREDNS_VERSION=1.9.2
+ARG COREDNS_VERSION=1.9.3
 ARG COREDNS_BRANCH=v$COREDNS_VERSION
 
 # ╭――――――――――――――――――――╮
@@ -32,14 +32,11 @@ RUN go generate
 RUN go build
 
 
-
-
-
-# ╭――――――――――――――――-------------------------------------------------------――╮
+# ╭―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――╮
 # │                                                                         │
-# │ STAGE 2: coredns-container                                              │
+# │ STAG: coredns-container                                              │
 # │                                                                         │
-# ╰―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――╯
+# ╰―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――╯
 FROM gautada/alpine:$ALPINE_VERSION
 
 # ╭――――――――――――――――――――╮
@@ -50,23 +47,34 @@ LABEL maintainer="Adam Gautier <adam@gautier.org>"
 LABEL description="This container is a coredns container."
 
 # ╭――――――――――――――――――――╮
-# │ ENVIRONMENT        │
+# │ STANDARD CONFIG    │
 # ╰――――――――――――――――――――╯
-# This force to change user did not work Issue #16
-# COPY 99-profile.sh /etc/profile.d/99-profile.sh
 
-# ╭――――――――――――――――――――╮
-# │ PORTS              │
-# ╰――――――――――――――――――――╯
-EXPOSE 53/tcp 53/udp
-EXPOSE 8080/tcp
-EXPOSE 8181/tcp
-EXPOSE 9153/tcp
+# USER:
+ARG USER=coredns
 
-# ╭――――――――――――――――――――╮
-# │ SUDO               │
-# ╰――――――――――――――――――――╯
-COPY wheel-coredns /etc/sudoers.d/wheel-coredns
+ARG UID=1001
+ARG GID=1001
+RUN /usr/sbin/addgroup -g $GID $USER \
+ && /usr/sbin/adduser -D -G $USER -s /bin/ash -u $UID $USER \
+ && /usr/sbin/usermod -aG wheel $USER \
+ && /bin/echo "$USER:$USER" | chpasswd
+
+# PRIVILEGE:
+COPY wheel  /etc/container/wheel
+
+# BACKUP:
+COPY backup /etc/container/backup
+
+# ENTRYPOINT:
+RUN rm -v /etc/container/entrypoint
+COPY entrypoint /etc/container/entrypoint
+
+# FOLDERS
+RUN /bin/chown -R $USER:$USER /mnt/volumes/container \
+ && /bin/chown -R $USER:$USER /mnt/volumes/backup \
+ && /bin/chown -R $USER:$USER /var/backup \
+ && /bin/chown -R $USER:$USER /tmp/backup
 
 # ╭――――――――――――――――――――╮
 # │ APPLICATION        │
@@ -79,17 +87,10 @@ RUN mkdir -p /etc/coredns \
  && ln -s /opt/coredns/zone.example.local /etc/coredns/zone.example.local \
  && ln -s /opt/coredns/hosts /etc/coredns/hosts
 
-# ╭――――――――――――――――――――╮
-# │ USER               │
-# ╰――――――――――――――――――――╯
-ARG USER=coredns
-# VOLUME /opt/$USER
-RUN /bin/mkdir -p /opt/$USER \
- && /usr/sbin/addgroup $USER \
- && /usr/sbin/adduser -D -s /bin/ash -G $USER $USER \
- && /usr/sbin/usermod -aG wheel $USER \
- && /bin/echo "$USER:$USER" | chpasswd \
- && /bin/chown $USER:$USER -R /opt/$USER
 
-USER root
+USER $USER
 WORKDIR /home/$USER
+EXPOSE 53/tcp 53/udp
+EXPOSE 8080/tcp
+EXPOSE 8181/tcp
+EXPOSE 9153/tcp

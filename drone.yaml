@@ -9,7 +9,7 @@ platform:
 steps:
 - name: build
   environment:
-    ALPINE_VERSION: 3.15.4
+    ALPINE_VERSION: latest
     COREDNS_VERSION: 1.9.3
   commands:
   - podman build --build-arg ALPINE_VERSION=$ALPINE_VERSION --build-arg COREDNS_VERSION=$COREDNS_VERSION --format docker --file Containerfile --label revision="$(git rev-parse HEAD)" --label version="$(date +%Y.%m.%d)" --no-cache --tag coredns:build .
@@ -23,6 +23,7 @@ steps:
       from_secret: password.docker.io
   commands:
    - podman tag coredns:build docker.io/gautada/coredns:$COREDNS_VERSION
+   - podman tag coredns:build docker.io/gautada/coredns:latest
    - podman login --username=$DOCKERIO_USERNAME --password=$DOCKERIO_PASSWORD docker.io
    - podman push docker.io/gautada/coredns:$COREDNS_VERSION
-  
+   - podman push docker.io/gautada/coredns:latest
