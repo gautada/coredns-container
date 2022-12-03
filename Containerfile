@@ -1,3 +1,10 @@
+# Docker/Podman/OCI container build specfication file.
+#
+# References:
+# - [Gist](https://gist.github.com/gautada/bd71914073b8e3a89ad13f0320b33010)
+# - [Buildah Containerfile](https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html/building_running_and_managing_containers/assembly_building-container-images-with-buildah_building-running-and-managing-containers#proc_building-an-image-from-a-containerfile-with-buildah_assembly_building-container-images-with-buildah)
+# - [Dockerfile](https://docs.docker.com/engine/reference/builder/)
+
 ARG ALPINE_VERSION=3.15.4
 # ╭―――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――――╮
 # │                                                                         │
