@@ -16,14 +16,19 @@ steps:
 
 - name: publish
   environment:
-    COREDNS_VERSION: 1.9.3
+    CONTAINER_NAME: "coredns"
+    CONTAINER_VERSION: "1.9.3"
     DOCKERIO_USERNAME:
       from_secret: username.docker.io
     DOCKERIO_PASSWORD:
       from_secret: password.docker.io
   commands:
-   - podman tag coredns:build docker.io/gautada/coredns:$COREDNS_VERSION
-   - podman tag coredns:build docker.io/gautada/coredns:latest
+   - podman tag $CONTAINER_NAME:drone docker.io/$DOCKERIO_USERNAME/$CONTAINER_NAME:$CONTAINER_VERSION
+   - podman tag $CONTAINER_NAME:drone docker.io/$DOCKERIO_USERNAME/$CONTAINER_NAME:latest
    - podman login --username=$DOCKERIO_USERNAME --password=$DOCKERIO_PASSWORD docker.io
-   - podman push docker.io/gautada/coredns:$COREDNS_VERSION
-   - podman push docker.io/gautada/coredns:latest
+   - podman push docker.io/$DOCKERIO_USERNAME/$CONTAINER_NAME:$CONTAINER_VERSION
+   - podman push docker.io/$DOCKERIO_USERNAME/$CONTAINER_NAME:latest
+
+trigger:
+  branch:
+  - main

@@ -68,10 +68,10 @@ RUN /usr/sbin/addgroup -g $GID $USER \
  && /bin/echo "$USER:$USER" | chpasswd
 
 # PRIVILEGE:
-COPY wheel  /etc/container/wheel
+# COPY wheel  /etc/container/wheel
 
 # BACKUP:
-COPY backup /etc/container/backup
+# COPY backup /etc/container/backup
 
 # ENTRYPOINT:
 RUN rm -v /etc/container/entrypoint
@@ -88,13 +88,15 @@ RUN /bin/chown -R $USER:$USER /mnt/volumes/container \
 # ╰――――――――――――――――――――╯
 # RUN chmod -x /etc/entrypoint.d/00-ep-bastion.sh /etc/entrypoint.d/01-ep-crond.sh /etc/entrypoint.d/99-ep-exec.sh
 COPY --from=src-coredns /coredns/coredns /usr/bin/coredns
-COPY 10-ep-container.sh /etc/entrypoint.d/10-ep-container.sh
-RUN mkdir -p /etc/coredns \
- && ln -s /opt/coredns/Corefile /etc/coredns/Corefile \
- && ln -s /opt/coredns/zone.example.local /etc/coredns/zone.example.local \
- && ln -s /opt/coredns/hosts /etc/coredns/hosts
-
-
+COPY entrypoint /etc/container/entrypoint
+RUN apk add --no-cache py3-requests
+RUN /bin/ln -fsv /mnt/volumes/container/Corefile /mnt/volumes/configmaps/Corefile \
+ && /bin/ln -fsv /mnt/volumes/configmaps/Corefile /etc/container/Corefile \
+ && /bin/ln -fsv /mnt/volumes/container/zone.example.local /mnt/volumes/configmaps/zone.example.local \
+ && /bin/ln -fsv /mnt/volumes/configmaps/zone.example.local /etc/container/zone.example.local \
+ && /bin/ln -fsv /mnt/volumes/container/hosts /mnt/volumes/configmaps/hosts \
+ && /bin/ln -fsv /mnt/volumes/configmaps/hosts /etc/container/hosts
+ 
 USER $USER
 WORKDIR /home/$USER
 EXPOSE 53/tcp 53/udp
