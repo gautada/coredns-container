@@ -12,7 +12,7 @@ steps:
     ALPINE_VERSION: latest
     COREDNS_VERSION: 1.9.3
   commands:
-  - podman build --build-arg ALPINE_VERSION=$ALPINE_VERSION --build-arg COREDNS_VERSION=$COREDNS_VERSION --format docker --file Containerfile --label revision="$(git rev-parse HEAD)" --label version="$(date +%Y.%m.%d)" --no-cache --tag coredns:build .
+  - podman build --build-arg ALPINE_VERSION=$ALPINE_VERSION --build-arg COREDNS_VERSION=$COREDNS_VERSION --format docker --file Containerfile --label revision="$(git rev-parse HEAD)" --label version="$(date +%Y.%m.%d)" --no-cache --tag coredns:drone .
 
 - name: publish
   environment:
