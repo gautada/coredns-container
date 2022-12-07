@@ -20,7 +20,7 @@ if [ -z "$@" ] ; then
   TEST=$?
   if [ $TEST -eq 1 ] ; then
    log "-i" "entrypoint" "Blocking application - coredns($(app_version))"
-   /usr/bin/coredns -conf /etc/container/CorefileG
+   /usr/bin/coredns -conf /etc/container/Corefile
   fi
   return 1
 else
