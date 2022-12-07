@@ -12,6 +12,8 @@ ENTRYPOINT_PARAMS="$@"
 app_version() {
  /usr/bin/coredns --version | head -n 1 | awk -F '-' '{print $2}'
 }
+
+/usr/bin/update-blacklist
 if [ -z "$@" ] ; then
   log "-i" "entrypoint" "Default entry"
   /usr/bin/pgrep coredns > /dev/null
@@ -24,6 +26,6 @@ if [ -z "$@" ] ; then
 else
  log "-i" "entrypoint" "Override default($ENTRYPOINT_PARAMS)"
  log "-i" "entrypoint" "Detatched application - coredns($(app_version))"
- /usr/bin/coredns -conf /etc/container/Corefile >> /mnt/volumes/container/override.log 2>&1 &
+ /usr/bin/coredns -conf /etc/container/Corefile >> /mnt/volumes/container/_log 2>&1 &
  return 0
 fi
