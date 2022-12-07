@@ -114,7 +114,7 @@ RUN ln -s /mnt/volumes/container/container-backup /usr/bin/container-backup
 # ╭――――――――――――――――――――╮
 # │ CONTAINER          │
 # ╰――――――――――――――――――――╯
-USER $USER
+# USER $USER
 VOLUME /mnt/volumes/backup
 VOLUME /mnt/volumes/configmaps
 VOLUME /mnt/volumes/container
