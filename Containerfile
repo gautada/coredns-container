@@ -71,7 +71,7 @@ RUN /usr/sbin/addgroup -g $GID $USER \
 # COPY wheel  /etc/container/wheel
 
 # BACKUP:
-# COPY backup /etc/container/backup
+COPY backup /etc/container/backup
 
 # ENTRYPOINT:
 RUN rm -v /etc/container/entrypoint
@@ -86,20 +86,41 @@ RUN /bin/chown -R $USER:$USER /mnt/volumes/container \
 # ╭――――――――――――――――――――╮
 # │ APPLICATION        │
 # ╰――――――――――――――――――――╯
-# RUN chmod -x /etc/entrypoint.d/00-ep-bastion.sh /etc/entrypoint.d/01-ep-crond.sh /etc/entrypoint.d/99-ep-exec.sh
 COPY --from=src-coredns /coredns/coredns /usr/bin/coredns
-COPY entrypoint /etc/container/entrypoint
-RUN apk add --no-cache py3-requests
+RUN apk add --no-cache py3-requests py3-yaml
+
 RUN /bin/ln -fsv /mnt/volumes/container/Corefile /mnt/volumes/configmaps/Corefile \
- && /bin/ln -fsv /mnt/volumes/configmaps/Corefile /etc/container/Corefile \
- && /bin/ln -fsv /mnt/volumes/container/zone.example.local /mnt/volumes/configmaps/zone.example.local \
- && /bin/ln -fsv /mnt/volumes/configmaps/zone.example.local /etc/container/zone.example.local \
- && /bin/ln -fsv /mnt/volumes/container/hosts /mnt/volumes/configmaps/hosts \
- && /bin/ln -fsv /mnt/volumes/configmaps/hosts /etc/container/hosts
+ && /bin/ln -fsv /mnt/volumes/configmaps/Corefile /etc/container/Corefile
+
+RUN /bin/ln -fsv /mnt/volumes/container/zone.local /mnt/volumes/configmaps/zone.local \
+ && /bin/ln -fsv /mnt/volumes/configmaps/zone.local /etc/container/zone.local
+
+RUN /bin/ln -fsv /mnt/volumes/container/zone.tld /mnt/volumes/configmaps/zone.tld \
+ && /bin/ln -fsv /mnt/volumes/configmaps/zone.tld /etc/container/zone.tld
  
+COPY blacklist /etc/container/blacklist
+RUN chown $USER:$USER /etc/container/blacklist
+
+RUN /bin/ln -fsv /mnt/volumes/container/blacklist.yml /mnt/volumes/configmaps/blacklist.yml \
+ && /bin/ln -fsv /mnt/volumes/configmaps/blacklist.yml /etc/container/blacklist.yml
+
+COPY update-blacklist /usr/bin/update-blacklist
+RUN ln -fsv /usr/bin/update-blacklist /etc/periodic/daily/update-blacklist
+
+RUN ln -s /mnt/volumes/container/backup.cer /etc/container/backup.cer
+RUN rm /usr/bin/container-backup
+RUN ln -s /mnt/volumes/container/container-backup /usr/bin/container-backup
+
+# ╭――――――――――――――――――――╮
+# │ CONTAINER          │
+# ╰――――――――――――――――――――╯
 USER $USER
-WORKDIR /home/$USER
+VOLUME /mnt/volumes/backup
+VOLUME /mnt/volumes/configmaps
+VOLUME /mnt/volumes/container
 EXPOSE 53/tcp 53/udp
 EXPOSE 8080/tcp
 EXPOSE 8181/tcp
 EXPOSE 9153/tcp
+
+
