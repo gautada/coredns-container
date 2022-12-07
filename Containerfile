@@ -68,7 +68,7 @@ RUN /usr/sbin/addgroup -g $GID $USER \
  && /bin/echo "$USER:$USER" | chpasswd
 
 # PRIVILEGE:
-# COPY wheel  /etc/container/wheel
+COPY wheel  /etc/container/wheel
 
 # BACKUP:
 COPY backup /etc/container/backup
