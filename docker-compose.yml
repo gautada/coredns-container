@@ -10,7 +10,7 @@ services:
       no_cache: true
       tags:
         - "coredns:dev"
-    image: "coredns:dev"
+    image: "gautada/coredns:latest"
     ports:
       - "53:53/udp"
       - "53:53/tcp"
