@@ -13,6 +13,15 @@ app_version() {
  /usr/bin/coredns --version | head -n 1 | awk -F '-' '{print $2}'
 }
 
+## Blackhole
+# /usr/bin/pgrep python3 > /dev/null
+# TEST=$?
+# if [ $TEST -eq 1 ] ; then
+#  log "-i" "entrypoint" "Launching application - blackhole($(app_version))"
+#  cd /home/blackhole
+#  /usr/bin/blackhole --domains blackhole.gautier.local,blackhole.gautier.org
+# fi
+  
 /usr/bin/update-blacklist
 if [ -z "$@" ] ; then
   log "-i" "entrypoint" "Default entry"

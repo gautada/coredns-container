@@ -111,6 +111,20 @@ RUN ln -s /mnt/volumes/container/backup.cer /etc/container/backup.cer
 RUN rm /usr/bin/container-backup
 RUN ln -s /mnt/volumes/container/container-backup /usr/bin/container-backup
 
+RUN apk add --no-cache py3-pip py3-requests py3-yaml
+# RUN pip install fastapi
+# RUN pip install "uvicorn[standard]"
+
+RUN /bin/ln -fsv /mnt/volumes/container/block.list /etc/container/block.list \
+ && /bin/ln -fsv /mnt/volumes/container/white.list /etc/container/white.list \
+ && /bin/ln -fsv /mnt/volumes/container/black.list /etc/container/black.list \
+ && /bin/ln -fsv /mnt/volumes/container/hosts.yml /mnt/volumes/configmaps/hosts.yml \
+ && /bin/ln -fsv /mnt/volumes/configmaps/hosts.yml /etc/container/hosts.yml
+
+## BLACK HOLE
+COPY blackhole.py /etc/container/blackhole.py
+RUN /bin/ln -fsv /etc/container/blackhole.py /usr/bin/blackhole
+
 # ╭――――――――――――――――――――╮
 # │ CONTAINER          │
 # ╰――――――――――――――――――――╯
@@ -120,6 +134,7 @@ VOLUME /mnt/volumes/configmaps
 VOLUME /mnt/volumes/container
 EXPOSE 53/tcp 53/udp
 EXPOSE 8080/tcp
+EXPOSE 8081/tcp
 EXPOSE 8181/tcp
 EXPOSE 9153/tcp
 
